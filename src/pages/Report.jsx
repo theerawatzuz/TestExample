@@ -30,15 +30,61 @@ import { Stack } from "@mui/material";
 import TextField from '@mui/material/TextField';
 
 
+const categories = [
+  { value: '', label: 'None' },
+  { value: 'WaterSupply', label: 'Water Supply' },
+  { value: 'Engineering', label: 'Engineering' },
+  { value: 'IT', label: 'IT' },
+  { value: 'OrgPlanning', label: 'Organization Planning' },
+  { value: 'Finance', label: 'Finance' },
+  { value: 'HR', label: 'Human Resources' },
+  { value: 'Admin', label: 'Administration' },
+];
+
+const importanceLevels = [
+  { value: '', label: 'None' },
+  { value: 'Low', label: 'Normal' },
+  { value: 'Medium', label: 'Urgent' },
+  { value: 'High', label: 'Very Urgent' },
+  { value: 'MostHighest', label: 'Emergency' },
+];
+
+const relatedDepartments = [
+  { value: '', label: 'None' },
+  { value: 'Marketing', label: 'Marketing' },
+  { value: 'Sales', label: 'Sales' },
+  { value: 'HumanResources', label: 'Human Resources' },
+  { value: 'CustomerRelations', label: 'Customer Relations' },
+  { value: 'Accounting/Finance', label: 'Accounting/Finance' },
+];
+
 function Report() {
   const currentDate = dayjs();
 
   const [channel, setChannel] = React.useState('');
+  const [classification, setClassification] = React.useState('');
+  const [priority, setPriority] = React.useState('');
+  const [department, setDepartment] = React.useState('');
 
-  const handleChange = (event) => {
+  const handleChangeChannel = (event) => {
     setChannel(event.target.value);
+    // Add specific logic for the 'channel' dropdown here
   };
 
+  const handleChangeClass = (event) => {
+    setClassification(event.target.value);
+    // Add specific logic for the 'classification' dropdown here
+  };
+
+  const handleChangePriority = (event) => {
+    setPriority(event.target.value);
+    // Add specific logic for the 'priority' dropdown here
+  };
+
+  const handleChangeDepartment = (event) => {
+    setDepartment(event.target.value);
+    // Add specific logic for the 'department' dropdown here
+  };
 
   return (
     <Layout>
@@ -98,9 +144,9 @@ function Report() {
                             <DemoItem label="ช่องทาง *">
                               <Select
                                 value={channel}
-                                onChange={handleChange}
+                                onChange={handleChangeChannel}
                                 displayEmpty
-                                inputProps={{ 'aria-label': 'Without label' }}
+                                inputProps={{ 'aria-label': 'Channel Select' }}
                                 style={{ width: '100%' }}
                               >
                                 <MenuItem value="">
@@ -139,7 +185,7 @@ function Report() {
                               </DemoItem>
                           </Grid>
                           <Grid container item xs={12} sm={12} md={6} sx={{display: 'flex', alignItems: 'center' }}>
-                                <Grid item xs={8} sm={8} md={9}>
+                                <Grid item xs={9} sm={9} md={9}>
                                     <DemoItem label="เบอร์โทรศัพท์ *">
                                     <TextField 
                                     fullWidth  
@@ -148,12 +194,70 @@ function Report() {
                                     id="phoneNumber" />
                                   </DemoItem>
                                 </Grid>
-                                <Grid item md={3} sx={{ mt: 4, display: 'flex', alignItems: 'center', justifyContent: 'end' }}>
+                                <Grid item xs={3} sm={3} md={3} sx={{ mt: 4, display: 'flex', alignItems: 'end', justifyContent: { xs: 'end', sm: 'center', md: 'end' } }}>
                                   <Button variant="contained">
                                     ตรวจสอบ
                                   </Button>
                                 </Grid>
                               </Grid>
+                        </Stack>  
+                  </Box>
+                  <Box sx={{mb:3}}>
+                  <Typography variant="body1" fontWeight="bold" sx={{mb:2}}>ข้อมูลที่แจ้ง</Typography>
+           
+                  <Stack sx={{ xs: 12, sm: 12, md: 2, lg: 1}} direction="row" useFlexGap flexWrap="wrap">
+                  <Grid item xs={12} sm={12} md={6} sx={{ pr: { xs: 0, md: 2 } }}>
+                  <DemoItem label="หมวดหมู่">
+                            <Select
+                              value={classification}
+                              onChange={handleChangeClass}
+                              displayEmpty
+                              inputProps={{ 'aria-label': 'Classification Select' }}
+                              style={{ width: '100%' }}
+                            >
+                              {categories.map((category) => (
+                                <MenuItem key={category.value} value={category.value}>
+                                  {category.label}
+                                </MenuItem>
+                              ))}
+                            </Select>
+                          </DemoItem>
+                          </Grid>
+                          <Grid item xs={12} sm={12} md={6}>
+                          <DemoItem label="ระดับความสำคัญ *">
+                            <Select
+                              value={priority}
+                              onChange={handleChangePriority}
+                              displayEmpty
+                              inputProps={{ 'aria-label': 'Priority Select' }}
+                              style={{ width: '100%' }}
+                            >
+                              {importanceLevels.map((level) => (
+                                <MenuItem key={level.value} value={level.value}>
+                                  {level.label}
+                                </MenuItem>
+                              ))}
+                            </Select>
+                          </DemoItem>
+                              </Grid>
+                              <Grid item xs={12} sm={12} md={12} sx={{mt:2}}>
+                              <DemoItem label="ฝ่ายที่เกี่ยวข้อง *">
+                                <Select
+                                  value={department}
+                                  onChange={handleChangeDepartment}
+                                  displayEmpty
+                                  inputProps={{ 'aria-label': 'Department Select' }}
+                                  style={{ width: '100%' }}
+                                >
+                                  {relatedDepartments.map((department) => (
+                                    <MenuItem key={department.value} value={department.value}>
+                                      {department.label}
+                                    </MenuItem>
+                                  ))}
+                                </Select>
+                              </DemoItem>
+                                </Grid>
+                         
                         </Stack>  
                   </Box>
                 </FormControl>

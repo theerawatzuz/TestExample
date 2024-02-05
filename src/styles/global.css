@@ -7,4 +7,9 @@ body {
     font-family: 'Poppins', 'Noto Sans Thai', sans-serif;
 }
 
+MuiSelect-root:focus {
+    outline: none; /* Remove the default focus outline */
+    border-color: black; /* Set a custom border color on focus */
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25); /* Add a custom box shadow on focus */
+  }
 @import url('https://fonts.googleapis.com/css2?family=Kanit&family=Noto+Sans+Thai&family=Poppins:ital,wght@0,300;1,200&family=Roboto+Condensed&display=swap');
