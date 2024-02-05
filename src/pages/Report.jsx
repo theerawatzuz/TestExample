@@ -29,6 +29,9 @@ import dayjs from 'dayjs';
 import { Stack } from "@mui/material";
 import TextField from '@mui/material/TextField';
 
+import { TextareaAutosize as BaseTextareaAutosize } from '@mui/base/TextareaAutosize';
+import { styled } from '@mui/system';
+
 
 const categories = [
   { value: '', label: 'None' },
@@ -82,6 +85,59 @@ function Report() {
     setDepartment(event.target.value);
   };
 
+  const blue = {
+    100: '#DAECFF',
+    200: '#b6daff',
+    400: '#3399FF',
+    500: '#007FFF',
+    600: '#0072E5',
+    900: '#003A75',
+  };
+
+  const grey = {
+    50: '#F3F6F9',
+    100: '#E5EAF2',
+    200: '#DAE2ED',
+    300: '#C7D0DD',
+    400: '#B0B8C4',
+    500: '#9DA8B7',
+    600: '#6B7A90',
+    700: '#434D5B',
+    800: '#303740',
+    900: '#1C2025',
+  };
+
+  const Textarea = styled(BaseTextareaAutosize)(
+    ({ theme }) => `
+    box-sizing: border-box;
+    width: 100%;
+    font-family: 'Poppins', 'Noto Sans Thai', sans-serif;
+    font-size: 0.875rem;
+    font-weight: 400;
+    line-height: 1.5;
+    padding: 8px 12px;
+    border-radius: 5px;
+    color: ${theme.palette.mode === 'dark' ? grey[300] : grey[900]};
+    background: ${theme.palette.mode === 'dark' ? grey[900] : '#fff'};
+    border: 1px solid ${theme.palette.mode === 'dark' ? grey[700] : grey[400]};
+    box-shadow: 0px 2px 2px ${theme.palette.mode === 'dark' ? grey[900] : grey[50]};
+
+    &:hover {
+      border-color: ${grey[900]};
+    }
+
+    &:focus {
+      border-color: ${blue[400]};
+      box-shadow: 0 0 0 1px ${theme.palette.mode === 'dark' ? blue[600] : blue[600]};
+    }
+    // firefox
+    &:focus-visible {
+      outline: 0;
+    }
+  `,
+  );
+
+
   return (
     <Layout>
       <React.Fragment>
@@ -121,8 +177,8 @@ function Report() {
                   <Box sx={{mb:3}}>
                   <Typography variant="body1" fontWeight="bold" sx={{mb:2}}>การรับเรื่อง</Typography>
            
-                  <Stack sx={{ xs: 12, sm: 12, md: 2, lg: 1}} direction="row" useFlexGap flexWrap="wrap">
-                          <Grid item xs={6} sm={6} md={3} sx={{ pr: { xs: 2, md: 2 } }}>
+                  <Stack sx={{ xs: 12, sm: 12, md: 2, lg: 1}}  direction="row" useFlexGap flexWrap="wrap">
+                          <Grid item xs={6} sm={6} md={3} sx={{ pr: { xs: 2, md: 2 }}}>
                             <LocalizationProvider dateAdapter={AdapterDayjs}>
                               <DemoItem label="วัน รับเรื่อง *">
                                 <DatePicker defaultValue={currentDate} size="small" />
@@ -263,9 +319,35 @@ function Report() {
                                   </FormControl>
                                 </DemoItem>
                                 </Grid>
+                                <Grid item xs={12} sm={12} md={12} sx={{mt:{xs:0, md:2}, mb:3}}>
+                                <DemoItem label="รายละเอียด">
+                                    <FormControl style={{ width: '100%' }}>
+                                    <Textarea aria-label="description" minRows={4} placeholder="" />
+                                    </FormControl>
+                                  </DemoItem>
+                                </Grid>
                         
                         </Stack>  
+                        <footer style={{ position: "sticky"
+                        , bottom: 0
+                        , width: "100%"
+                        , backgroundColor: "rgba(128, 128, 128, 0.8)"
+                        , padding: "10px"
+                        , textAlign: "center"
+                        , display: "flex"
+                        , justifyContent: "center"
+                        , alignItems: "center"
+                        , zIndex: 1
+                        , borderRadius: "5px"
+                        , boxShadow: "0px 8px 15px rgba(0, 0, 0, 0.1)"
+                         }}>
+                          <Button variant="contained" style={{ justifySelf: "center", alignSelf: "center" }}>
+                            บันทึก
+                          </Button>
+                        </footer>
                   </Box>
+                 
+
                 </FormControl>
         
                 </Box>
