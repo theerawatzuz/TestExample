@@ -68,22 +68,18 @@ function Report() {
 
   const handleChangeChannel = (event) => {
     setChannel(event.target.value);
-    // Add specific logic for the 'channel' dropdown here
   };
 
   const handleChangeClass = (event) => {
     setClassification(event.target.value);
-    // Add specific logic for the 'classification' dropdown here
   };
 
   const handleChangePriority = (event) => {
     setPriority(event.target.value);
-    // Add specific logic for the 'priority' dropdown here
   };
 
   const handleChangeDepartment = (event) => {
     setDepartment(event.target.value);
-    // Add specific logic for the 'department' dropdown here
   };
 
   return (
@@ -140,8 +136,9 @@ function Report() {
                               </DemoItem>
                             </LocalizationProvider>
                           </Grid>
-                          <Grid item xs={12} sm={12} md={6}>
+                          <Grid item xs={12} sm={12} md={6} >
                             <DemoItem label="ช่องทาง *">
+                            <FormControl style={{ width: '100%' }} >
                               <Select
                                 value={channel}
                                 onChange={handleChangeChannel}
@@ -156,6 +153,7 @@ function Report() {
                                 <MenuItem value="Telephone">Telephone</MenuItem>
                                 <MenuItem value="WebsiteReport">Website Report</MenuItem>
                               </Select>
+                              </FormControl>
                             </DemoItem>
                           </Grid>
                         </Stack>  
@@ -207,57 +205,65 @@ function Report() {
            
                   <Stack sx={{ xs: 12, sm: 12, md: 2, lg: 1}} direction="row" useFlexGap flexWrap="wrap">
                   <Grid item xs={12} sm={12} md={6} sx={{ pr: { xs: 0, md: 2 } }}>
-                  <DemoItem label="หมวดหมู่">
-                            <Select
-                              value={classification}
-                              onChange={handleChangeClass}
-                              displayEmpty
-                              inputProps={{ 'aria-label': 'Classification Select' }}
-                              style={{ width: '100%' }}
-                            >
-                              {categories.map((category) => (
-                                <MenuItem key={category.value} value={category.value}>
-                                  {category.label}
-                                </MenuItem>
-                              ))}
-                            </Select>
-                          </DemoItem>
+                        <DemoItem label="หมวดหมู่">
+                        <FormControl style={{ width: '100%' }} >
+                          <Select
+                            value={classification}
+                            onChange={handleChangeClass}
+                            displayEmpty
+                            inputProps={{ 'aria-label': 'Classification Select' }}
+                            style={{ width: '100%' }}
+                          >
+                            {categories.map((category) => (
+                              <MenuItem key={category.value} value={category.value}>
+                                {category.label}
+                              </MenuItem>
+                            ))}
+                          </Select>
+                          </FormControl>
+                        </DemoItem>
                           </Grid>
+                          
                           <Grid item xs={12} sm={12} md={6}>
                           <DemoItem label="ระดับความสำคัญ *">
-                            <Select
-                              value={priority}
-                              onChange={handleChangePriority}
-                              displayEmpty
-                              inputProps={{ 'aria-label': 'Priority Select' }}
-                              style={{ width: '100%' }}
-                            >
-                              {importanceLevels.map((level) => (
-                                <MenuItem key={level.value} value={level.value}>
-                                  {level.label}
-                                </MenuItem>
-                              ))}
-                            </Select>
-                          </DemoItem>
+                          <FormControl style={{ width: '100%' }} >
+                              <Select
+                                value={priority}
+                                onChange={handleChangePriority}
+                                displayEmpty
+                                inputProps={{ 'aria-label': 'Priority Select' }}
+                                style={{ width: '100%' }}
+                              >
+                                {importanceLevels.map((level) => (
+                                  <MenuItem key={level.value} value={level.value}>
+                                    {level.label}
+                                  </MenuItem>
+                                ))}
+                              </Select>
+                              </FormControl>
+                            </DemoItem>
                               </Grid>
-                              <Grid item xs={12} sm={12} md={12} sx={{mt:2}}>
+                             
+                              <Grid item xs={12} sm={12} md={12} sx={{mt:{xs:0, md:2}}}>
                               <DemoItem label="ฝ่ายที่เกี่ยวข้อง *">
-                                <Select
-                                  value={department}
-                                  onChange={handleChangeDepartment}
-                                  displayEmpty
-                                  inputProps={{ 'aria-label': 'Department Select' }}
-                                  style={{ width: '100%' }}
-                                >
-                                  {relatedDepartments.map((department) => (
-                                    <MenuItem key={department.value} value={department.value}>
-                                      {department.label}
-                                    </MenuItem>
-                                  ))}
-                                </Select>
-                              </DemoItem>
+                              <FormControl style={{ width: '100%' }} >
+                                  <Select
+                                    value={department}
+                                    onChange={handleChangeDepartment}
+                                    displayEmpty
+                                    inputProps={{ 'aria-label': 'Department Select' }}
+                                    style={{ width: '100%' }}
+                                  >
+                                    {relatedDepartments.map((department) => (
+                                      <MenuItem key={department.value} value={department.value}>
+                                        {department.label}
+                                      </MenuItem>
+                                    ))}
+                                  </Select>
+                                  </FormControl>
+                                </DemoItem>
                                 </Grid>
-                         
+                        
                         </Stack>  
                   </Box>
                 </FormControl>
