@@ -224,8 +224,8 @@ function Resultreport() {
                       <TableCell align="center">{row.lastName}</TableCell>
                       <TableCell align="center">{row.phoneNumber}</TableCell>
                       <TableCell align="center">
-                        <ButtonGroup variant="contained" size="small" aria-label="small primary button group">
-                          <Button color="success">ACCEPT</Button>
+                        <ButtonGroup variant="contained" disabled size="small" aria-label="small primary button group">
+                          <Button color="success" >ACCEPT</Button>
                           <Button color="error">DELETE</Button>
                         </ButtonGroup>
                       </TableCell>
