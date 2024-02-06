@@ -1,6 +1,6 @@
 import Layout from "../components/Layout";
 import '../styles/global.css';
-import * as React from 'react';
+import React, { useState, useEffect, useRef  } from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
@@ -31,6 +31,7 @@ import TextField from '@mui/material/TextField';
 
 import { TextareaAutosize as BaseTextareaAutosize } from '@mui/base/TextareaAutosize';
 import { styled } from '@mui/system';
+import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined';
 
 
 const categories = [
@@ -62,7 +63,43 @@ const relatedDepartments = [
 ];
 
 function Report() {
+
+  const detailRef = useRef(null);
+
+  const [data, setData] = useState({
+    receivingDate: null,
+    receivingTime: null,
+    name: '',
+    lastName: '',
+    channel: '',
+    phoneNumber: '',
+    category: '',
+    priority: '',
+    department: '',
+    detail: '',
+  });
+
+  const handleSave = () => {
+    const detailValue = detailRef.current.value;
+    setData((prevData) => ({
+      ...prevData,
+      detail: detailValue,
+    }));
+  };
+
+  useEffect(() => {
+    console.log(data);
+  }, [data]); 
+
+  const handleChange = (key, value) => {
+    setData((prevData) => ({
+      ...prevData,
+      [key]: value,
+    }));
+  };
+
   const currentDate = dayjs();
+  const currentTime = dayjs();
 
   const [channel, setChannel] = React.useState('');
   const [classification, setClassification] = React.useState('');
@@ -181,14 +218,22 @@ function Report() {
                           <Grid item xs={6} sm={6} md={3} sx={{ pr: { xs: 2, md: 2 }}}>
                             <LocalizationProvider dateAdapter={AdapterDayjs}>
                               <DemoItem label="วัน รับเรื่อง *">
-                                <DatePicker defaultValue={currentDate} size="small" />
+                                <DatePicker 
+                                defaultValue={currentDate} 
+                                size="small"
+                                onChange={(date) => setData({ ...data, receivingDate: date})} 
+                                />
                               </DemoItem>
                             </LocalizationProvider>
                           </Grid>
                           <Grid item xs={6} sm={6} md={3} sx={{ pr: { xs: 0, md: 2 } }}>
                             <LocalizationProvider dateAdapter={AdapterDayjs}>
                               <DemoItem label="เวลา รับเรื่อง *">
-                                <TimePicker defaultValue={currentDate} size="small" />
+                                <TimePicker 
+                                defaultValue={currentTime} 
+                                size="small" 
+                                onChange={(time) => setData({ ...data, receivingTime: time})} 
+                                />
                               </DemoItem>
                             </LocalizationProvider>
                           </Grid>
@@ -196,8 +241,8 @@ function Report() {
                             <DemoItem label="ช่องทาง *">
                             <FormControl style={{ width: '100%' }} >
                               <Select
-                                value={channel}
-                                onChange={handleChangeChannel}
+                                value={data.channel}
+                                onChange={(e) => setData({ ...data, channel: e.target.value})}
                                 displayEmpty
                                 inputProps={{ 'aria-label': 'Channel Select' }}
                                 style={{ width: '100%' }}
@@ -225,7 +270,9 @@ function Report() {
                                 fullWidth  
                                 required
                                 placeholder="ชื่อ"
-                                id="name" />
+                                id="name" 
+                                onChange={(e) => handleChange('name', e.target.value)} 
+                                />
                               </DemoItem>
                     
                           </Grid>
@@ -235,7 +282,9 @@ function Report() {
                                 fullWidth  
                                 required
                                 placeholder="นามสกุล"
-                                id="lastname" />
+                                id="lastName" 
+                                onChange={(e) => handleChange('lastName', e.target.value)} 
+                                />
                               </DemoItem>
                           </Grid>
                           <Grid container item xs={12} sm={12} md={6} sx={{display: 'flex', alignItems: 'center' }}>
@@ -245,7 +294,9 @@ function Report() {
                                     fullWidth  
                                     required
                                     placeholder="08XXXXXXXX"
-                                    id="phoneNumber" />
+                                    id="phoneNumber" 
+                                    onChange={(e) => handleChange('phoneNumber', e.target.value)} 
+                                    />
                                   </DemoItem>
                                 </Grid>
                                 <Grid item xs={3} sm={3} md={3} sx={{ mt: 4, display: 'flex', alignItems: 'end', justifyContent: { xs: 'end', sm: 'center', md: 'end' } }}>
@@ -264,8 +315,8 @@ function Report() {
                         <DemoItem label="หมวดหมู่">
                         <FormControl style={{ width: '100%' }} >
                           <Select
-                            value={classification}
-                            onChange={handleChangeClass}
+                            value={data.category}
+                            onChange={(e) => setData({ ...data, category: e.target.value})}
                             displayEmpty
                             inputProps={{ 'aria-label': 'Classification Select' }}
                             style={{ width: '100%' }}
@@ -284,8 +335,8 @@ function Report() {
                           <DemoItem label="ระดับความสำคัญ *">
                           <FormControl style={{ width: '100%' }} >
                               <Select
-                                value={priority}
-                                onChange={handleChangePriority}
+                                value={data.priority}
+                                onChange={(e) => setData({ ...data, priority: e.target.value})}
                                 displayEmpty
                                 inputProps={{ 'aria-label': 'Priority Select' }}
                                 style={{ width: '100%' }}
@@ -304,8 +355,8 @@ function Report() {
                               <DemoItem label="ฝ่ายที่เกี่ยวข้อง *">
                               <FormControl style={{ width: '100%' }} >
                                   <Select
-                                    value={department}
-                                    onChange={handleChangeDepartment}
+                                    value={data.department}
+                                    onChange={(e) => setData({ ...data, department: e.target.value})}
                                     displayEmpty
                                     inputProps={{ 'aria-label': 'Department Select' }}
                                     style={{ width: '100%' }}
@@ -320,12 +371,19 @@ function Report() {
                                 </DemoItem>
                                 </Grid>
                                 <Grid item xs={12} sm={12} md={12} sx={{mt:{xs:0, md:2}, mb:3}}>
-                                <DemoItem label="รายละเอียด">
-                                    <FormControl style={{ width: '100%' }}>
-                                    <Textarea aria-label="description" minRows={4} placeholder="" />
-                                    </FormControl>
-                                  </DemoItem>
-                                </Grid>
+                                    <DemoItem label="รายละเอียด">
+                                        <FormControl style={{ width: '100%' }}>
+                                            <Textarea 
+                                              aria-label="detail" 
+                                              minRows={4} 
+                                              placeholder="" 
+                                              id="detail"
+                                              ref={detailRef}
+
+                                            />
+                                      </FormControl>
+                                    </DemoItem>
+                                  </Grid>
                         
                         </Stack>  
                         <footer style={{ position: "sticky"
@@ -341,8 +399,11 @@ function Report() {
                         , borderRadius: "5px"
                         , boxShadow: "0px 8px 15px rgba(0, 0, 0, 0.1)"
                          }}>
-                          <Button variant="contained" style={{ justifySelf: "center", alignSelf: "center" }}>
-                            บันทึก
+                          <Button 
+                          variant="contained" 
+                          style={{ justifySelf: "center", alignSelf: "center" }} 
+                          onClick={handleSave}>
+                          <SaveOutlinedIcon sx={{height: '20px'}}/> บันทึก
                           </Button>
                         </footer>
                   </Box>
