@@ -11,7 +11,11 @@ const router = createBrowserRouter(
   [
     {
       path: '/',
-      element: <Report />
+      element: (
+        <ThemeProvider theme={theme}>
+          <Report />
+        </ThemeProvider>
+      )
     },
     {
       path: '/resultreport',
