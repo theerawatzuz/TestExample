@@ -1,6 +1,6 @@
 import Layout from "../components/Layout"
 import '../styles/global.css'
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
@@ -19,27 +19,29 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import axios from 'axios';
+import Button from '@mui/material/Button';
+import ButtonGroup from '@mui/material/ButtonGroup';
 
 
-function createData(name, calories, fat, carbs, protein) {
-  return { name, calories, fat, carbs, protein };
-}
-
-const rows = [
-  createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-  createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-  createData('Eclair', 262, 16.0, 24, 6.0),
-  createData('Cupcake', 305, 3.7, 67, 4.3),
-  createData('Gingerbread', 356, 16.0, 49, 3.9),
-];
 
 
 function Resultreport() {
 
   const [activeIndex, setActiveIndex] = useState(0);
+  const [data, setData] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
 
   const handleItemClick = (index) => {
     setActiveIndex(index);
+  };
+
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value);
+  };
+
+  const handleKeyUp = (event) => {
+    setSearchTerm(event.target.value);
   };
 
   const Search = styled('div')(({ theme }) => ({
@@ -85,6 +87,28 @@ function Resultreport() {
   const BoldTableCell = styled(TableCell)`
   font-weight: bold;
 `;
+
+    useEffect(() => {
+      axios.get('https://ap-southeast-1.aws.data.mongodb-api.com/app/application-1-dwdap/endpoint/crmGetAllData')
+        .then((response) => {
+          console.log(JSON.stringify(response.data));
+          setData(response.data); 
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }, []);
+
+    const filteredData = data.filter((row) =>
+    (row.priority && row.priority.toLowerCase().includes(searchTerm.toLowerCase())) ||
+    (row.department && row.department.toLowerCase().includes(searchTerm.toLowerCase())) ||
+    (row.category && row.category.toLowerCase().includes(searchTerm.toLowerCase())) ||
+    (row.name && row.name.toLowerCase().includes(searchTerm.toLowerCase())) ||
+    (row.lastName && row.lastName.toLowerCase().includes(searchTerm.toLowerCase())) ||
+    (row.phoneNumber && row.phoneNumber.toLowerCase().includes(searchTerm.toLowerCase())) ||
+    (`${new Date(row.receivingDate).toLocaleDateString()} ${new Date(row.receivingTime).toLocaleTimeString()}`.toLowerCase().includes(searchTerm.toLowerCase()))
+);
+
 
   return (
     <Layout>
@@ -147,15 +171,18 @@ function Resultreport() {
                   </Grid>
                 <Grid item xs={12} sm={4} md={4} sx={{ display: 'flex', alignItems: 'center', justifyContent: { xs: 'center', sm: 'flex-end' }}}>
                   <Box>
-                    <Search>
-                      <SearchIconWrapper>
-                        <SearchIcon />
-                      </SearchIconWrapper>
-                      <StyledInputBase
-                        placeholder="Search…"
-                        inputProps={{ 'aria-label': 'search' }}
-                      />
-                    </Search>
+                      <Search>
+                          <SearchIconWrapper>
+                            <SearchIcon />
+                          </SearchIconWrapper>
+                          <StyledInputBase
+                            placeholder="Search…"
+                            inputProps={{ 'aria-label': 'search' }}
+                            value={searchTerm}
+                            onChange={handleSearchChange}
+                            onKeyUp={handleKeyUp}
+                          />
+                        </Search>
                     </Box>
                 </Grid>
               </Grid>
@@ -165,26 +192,34 @@ function Resultreport() {
                 <Table sx={{ minWidth: 650 }} aria-label="simple table">
                   <TableHead>
                     <TableRow>
-                      <BoldTableCell>Dessert (100g serving)</BoldTableCell>
-                      <BoldTableCell align="right">Calories</BoldTableCell>
-                      <BoldTableCell align="right">Fat&nbsp;(g)</BoldTableCell>
-                      <BoldTableCell align="right">Carbs&nbsp;(g)</BoldTableCell>
-                      <BoldTableCell align="right">Protein&nbsp;(g)</BoldTableCell>
+                      {/* <BoldTableCell>ID</BoldTableCell> */}
+                      <BoldTableCell align="center">Priority</BoldTableCell>
+                      <BoldTableCell align="center">Date&Time</BoldTableCell>
+                      <BoldTableCell align="center">Department</BoldTableCell>
+                      <BoldTableCell align="center">Category</BoldTableCell>
+                      <BoldTableCell align="center">Name</BoldTableCell>
+                      <BoldTableCell align="center">Last name</BoldTableCell>
+                      <BoldTableCell align="center">Phone</BoldTableCell>
+                      <BoldTableCell align="center">Action</BoldTableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {rows.map((row) => (
-                      <TableRow
-                        key={row.name}
-                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                      >
-                        <TableCell component="th" scope="row">
-                          {row.name}
+                  {filteredData.map((row) => (
+                      <TableRow key={row._id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                        {/* <TableCell component="th" scope="row">{row._id}</TableCell> */}
+                        <TableCell align="center">{row.priority}</TableCell>
+                        <TableCell align="center">{`${new Date(row.receivingDate).toLocaleDateString()} ${new Date(row.receivingTime).toLocaleTimeString()}`}</TableCell>
+                        <TableCell align="center">{row.department}</TableCell>
+                        <TableCell align="center">{row.category}</TableCell>
+                        <TableCell align="center">{row.name}</TableCell>
+                        <TableCell align="center">{row.lastName}</TableCell>
+                        <TableCell align="center">{row.phoneNumber}</TableCell>
+                        <TableCell align="center">
+                            <ButtonGroup variant="contained" size="small" aria-label="small primary button group">
+                              <Button color="success">ACCEPT</Button>
+                              <Button color="error">DELETE</Button>
+                            </ButtonGroup>
                         </TableCell>
-                        <TableCell align="right">{row.calories}</TableCell>
-                        <TableCell align="right">{row.fat}</TableCell>
-                        <TableCell align="right">{row.carbs}</TableCell>
-                        <TableCell align="right">{row.protein}</TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
