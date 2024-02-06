@@ -32,6 +32,8 @@ import TextField from '@mui/material/TextField';
 import { TextareaAutosize as BaseTextareaAutosize } from '@mui/base/TextareaAutosize';
 import { styled } from '@mui/system';
 import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined';
+import axios from "axios";
+import Alert from '@mui/material/Alert';
 
 
 const categories = [
@@ -78,6 +80,7 @@ function Report() {
     setIsPhoneNumberValid(isValid);
   };
 
+  const [isPosted, setIsPosted] = useState(false);
 
   const detailRef = useRef(null);
 
@@ -94,18 +97,47 @@ function Report() {
     detail: '',
   });
 
+  const [formData, setFormData] = useState({
+    receivingDate: null,
+    receivingTime: null,
+    name: '',
+    lastName: '',
+    channel: '',
+    phoneNumber: '',
+    category: '',
+    priority: '',
+    department: '',
+    detail: '',
+  });
+
   const handleSave = () => {
     const detailValue = detailRef.current.value;
     const inputDate = data.receivingDate === null ? currentDate : data.receivingDate;
     const inputTime = data.receivingTime === null ? currentTime : data.receivingTime;
-  
-    setData((prevData) => ({
-      ...prevData,
+
+    const newData = {
+      ...formData,
       detail: detailValue,
       receivingDate: inputDate,
       receivingTime: inputTime,
-    }));
+    };
+  
+
+    setData(newData);
+
+ 
+    axios.post('https://ap-southeast-1.aws.data.mongodb-api.com/app/application-1-dwdap/endpoint/crmCardCreate', newData)
+      .then((response) => {
+        console.log(JSON.stringify(response.data));
+        setIsPosted(true);
+        resetFormData();
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+      
   };
+
 
   useEffect(() => {
     if (!data.category) {
@@ -141,12 +173,38 @@ function Report() {
     console.log(data);
   }, [data]); 
 
+  useEffect(() => {
+    if (isPosted) {
+      const timer = setTimeout(() => {
+        setIsPosted(false);
+   
+      }, 3000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [isPosted]);
+
 
   const handleChange = (key, value) => {
     setData((prevData) => ({
       ...prevData,
       [key]: value,
     }));``
+  };
+
+  const resetFormData = () => {
+    setFormData({
+      receivingDate: null,
+      receivingTime: null,
+      name: '',
+      lastName: '',
+      channel: '',
+      phoneNumber: '',
+      category: '',
+      priority: '',
+      department: '',
+      detail: '',
+    });
   };
 
   const currentDate = dayjs();
@@ -229,7 +287,22 @@ function Report() {
   return (
     <Layout>
       <React.Fragment>
+      {isPosted && (
+         <Alert
+          variant="filled"
+          severity="success"
+          style={{
+            position: 'fixed',
+            top: '20px',
+            right: '20px',
+            zIndex: 1000,
+          }}
+        >
+            บันทึกสำเร็จ
+        </Alert>
+      )}
         <Box sx={{  height: '100vh'  ,mt: 2}}>
+        
           <Container maxWidth="lg">
             <Box sx={{ flexGrow: 1}}>
             <Grid container spacing={3}>
