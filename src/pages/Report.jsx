@@ -483,8 +483,9 @@ function Report() {
                         <footer style={{ position: "sticky"
                         , bottom: 0
                         , width: "100%"
+           
                         , backgroundColor: " rgba(209, 213, 219, 0.3)"
-                        , padding: "10px"
+                        , padding: "15px 0px 15px 0px"
                         , textAlign: "center"
                         , display: "flex"
                         , justifyContent: "center"
