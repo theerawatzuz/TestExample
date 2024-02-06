@@ -301,7 +301,7 @@ function Report() {
             บันทึกสำเร็จ
         </Alert>
       )}
-        <Box sx={{  height: '100vh'  ,mt: 2}}>
+        <Box sx={{  height: '100vh'  ,mt: 3}}>
         
           <Container maxWidth="lg">
             <Box sx={{ flexGrow: 1}}>
