@@ -64,6 +64,21 @@ const relatedDepartments = [
 
 function Report() {
 
+  const [isPhoneNumberValid, setIsPhoneNumberValid] = useState(false);
+
+  const [categoryText, setCategoryText] = useState('ยังไม่ระบุหมวดหมู่');
+  const [departmentText, setDepartmentText] = useState('-');
+  const [phoneNumberText, setPhoneNumberText] = useState('-');
+
+
+
+  const handleCheckPhoneNumber = (phoneNumber) => {
+    const regex = /^[0-9]{10}$/;
+    const isValid = regex.test(phoneNumber);
+    setIsPhoneNumberValid(isValid);
+  };
+
+
   const detailRef = useRef(null);
 
   const [data, setData] = useState({
@@ -81,21 +96,57 @@ function Report() {
 
   const handleSave = () => {
     const detailValue = detailRef.current.value;
+    const inputDate = data.receivingDate === null ? currentDate : data.receivingDate;
+    const inputTime = data.receivingTime === null ? currentTime : data.receivingTime;
+  
     setData((prevData) => ({
       ...prevData,
       detail: detailValue,
+      receivingDate: inputDate,
+      receivingTime: inputTime,
     }));
   };
+
+  useEffect(() => {
+    if (!data.category) {
+      setCategoryText('ยังไม่ระบุหมวดหมู่');
+    } else {
+      const selectedCategory = categories.find((cat) => cat.value === data.category);
+      setCategoryText(selectedCategory ? selectedCategory.label : '');
+    }
+  }, [data.category]);
+
+
+  useEffect(() => {
+    if (!data.department) {
+      setDepartmentText('-');
+    } else {
+      const selectedDepartment = relatedDepartments.find((cat) => cat.value === data.department);
+      setDepartmentText(selectedDepartment ? selectedDepartment.label : '');
+    }
+  }, [data.department]);
+
+
+  useEffect(() => {
+    if (!data.phoneNumber) {
+      setPhoneNumberText('-');
+    } else {
+      setPhoneNumberText(data.phoneNumber);
+    }
+  }, [data.phoneNumber]);
+
+  
 
   useEffect(() => {
     console.log(data);
   }, [data]); 
 
+
   const handleChange = (key, value) => {
     setData((prevData) => ({
       ...prevData,
       [key]: value,
-    }));
+    }));``
   };
 
   const currentDate = dayjs();
@@ -185,7 +236,7 @@ function Report() {
               <Grid item xs={12} sm={12} md={3}>
                 <Card variant="outlined" sx={{p:1 , bgcolor: "#f0f5f5",  borderRadius: '16px'}}>
                 <Box sx={{ display: "flex", justifyContent: 'space-between' , ml:2}}>
-                  <Typography variant="body1" component="div" fontWeight="bold">ยังไม่ระบุหมวดหมู่</Typography>
+                  <Typography variant="body1" component="div" fontWeight="bold">{categoryText}</Typography>
                   <IconButton aria-label="more" size="small" sx={{color: 'gray'}}>
                     <MoreVertIcon fontSize="small" />
                   </IconButton>
@@ -195,7 +246,7 @@ function Report() {
                       <LocationOnOutlinedIcon fontSize="small" />
                   </IconButton>
                   <Typography variant="body2" component="div">
-                    -
+                    {departmentText}
                   </Typography>
                 </Box>
                 <Box sx={{ display: "flex", justifyContent: 'start' , ml:1 , alignItems: 'center'}}>
@@ -203,7 +254,7 @@ function Report() {
                       <PhoneCallbackOutlinedIcon fontSize="small" />
                   </IconButton>
                   <Typography variant="body2" component="div">
-                    -
+                  {phoneNumberText}
                   </Typography>
                 </Box>
                 </Card>
@@ -300,7 +351,11 @@ function Report() {
                                   </DemoItem>
                                 </Grid>
                                 <Grid item xs={3} sm={3} md={3} sx={{ mt: 4, display: 'flex', alignItems: 'end', justifyContent: { xs: 'end', sm: 'center', md: 'end' } }}>
-                                  <Button variant="contained">
+                                     <Button 
+                                          variant="contained" 
+                                          color={isPhoneNumberValid ? 'success' : 'error'}
+                                          onClick={() => handleCheckPhoneNumber(data.phoneNumber)}
+                                        >
                                     ตรวจสอบ
                                   </Button>
                                 </Grid>
@@ -389,7 +444,7 @@ function Report() {
                         <footer style={{ position: "sticky"
                         , bottom: 0
                         , width: "100%"
-                        , backgroundColor: "rgba(128, 128, 128, 0.8)"
+                        , backgroundColor: " rgba(209, 213, 219, 0.3)"
                         , padding: "10px"
                         , textAlign: "center"
                         , display: "flex"
@@ -397,7 +452,7 @@ function Report() {
                         , alignItems: "center"
                         , zIndex: 1
                         , borderRadius: "5px"
-                        , boxShadow: "0px 8px 15px rgba(0, 0, 0, 0.1)"
+                        , boxShadow: "0px 8px 15px rgba(0, 0, 0, 0.2)"
                          }}>
                           <Button 
                           variant="contained" 
