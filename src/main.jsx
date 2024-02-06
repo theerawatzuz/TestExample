@@ -1,17 +1,33 @@
 import React from 'react'
-import ReactDOM from 'react-dom/client'
+import ReactDOM from 'react-dom'
 import Report from './pages/Report.jsx'
+import Resultreport from './pages/ResultReport.jsx'
 import theme from './themes/theme.jsx'
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
+const router = createBrowserRouter(
+  [
+    {
+      path: '/',
+      element: <Report />
+    },
+    {
+      path: '/resultreport',
+      element: <Resultreport />
+    },
+  ]
+)
 
-
-ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <Report />
-    </ThemeProvider>
-  </React.StrictMode>,
+ReactDOM.render(
+  <RouterProvider router={router}>
+    <React.StrictMode>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <Report />
+      </ThemeProvider>
+    </React.StrictMode>
+  </RouterProvider>,
+  document.getElementById('root')
 );

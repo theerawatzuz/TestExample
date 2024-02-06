@@ -34,7 +34,7 @@ export default function NavBar() {
          <Typography variant="h6" component="div" sx={{ flexGrow: 1, fontWeight: 800 }}>
           My CRM
         </Typography>
-          {/* <Button color="inherit">Login</Button> */}
+          <Button color="success" variant="contained">Table</Button>
         </Toolbar>
       </AppBar>
     </Box>
